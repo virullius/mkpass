@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGenerateDefault(t *testing.T) {
+func TestGenerateWithDefaultOptions(t *testing.T) {
 	s, err := Generate(DefaultOptions)
 	if err != nil {
 		t.Fatal(err.Error())
@@ -15,7 +15,7 @@ func TestGenerateDefault(t *testing.T) {
 	}
 }
 
-func TestGenerateEmptySet(t *testing.T) {
+func TestGenerateWithEmptyOptions(t *testing.T) {
 	_, err := Generate(Options{})
 	if err == nil {
 		t.Errorf("Expecting empty charset error, received nil error")
