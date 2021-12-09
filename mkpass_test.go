@@ -93,3 +93,9 @@ func TestGenerateSymbolOnly(t *testing.T) {
 		t.Errorf("Unexpected number character in %s", s)
 	}
 }
+
+func BenchmarkGenerateWithDefaultOptions(b *testing.B) {
+  for i := 0; i < b.N; i++ {
+	  Generate(DefaultOptions)
+  }
+}
