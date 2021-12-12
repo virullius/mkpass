@@ -99,3 +99,11 @@ func BenchmarkGenerateWithDefaultOptions(b *testing.B) {
 	  Generate(DefaultOptions)
   }
 }
+
+func BenchmarkGenerate10kLong(b *testing.B) {
+  opt := DefaultOptions
+  opt.Length = 10000
+  for i := 0; i < b.N; i++ {
+    Generate(opt)
+  }
+}
