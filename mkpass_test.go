@@ -6,7 +6,7 @@ import (
 )
 
 func TestGenerateWithDefaultOptions(t *testing.T) {
-	s, err := Generate(DefaultOptions)
+	s, err := Generate()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -15,17 +15,21 @@ func TestGenerateWithDefaultOptions(t *testing.T) {
 	}
 }
 
-func TestGenerateWithEmptyOptions(t *testing.T) {
-	_, err := Generate(Options{})
+func TestConfigureWithEmptyOptions(t *testing.T) {
+	err := Configure(Options{})
 	if err == nil {
 		t.Errorf("Expecting empty charset error, received nil error")
 	}
 }
 
 func TestGenerateUpperOnly(t *testing.T) {
-	s, err := Generate(Options{
-		Upper: true,
-	})
+  err := Configure(Options{
+    Upper: true,
+  })
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+  s, err := Generate()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -41,9 +45,13 @@ func TestGenerateUpperOnly(t *testing.T) {
 }
 
 func TestGenerateLowerOnly(t *testing.T) {
-	s, err := Generate(Options{
+	err := Configure(Options{
 		Lower: true,
 	})
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	s, err := Generate()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -59,9 +67,13 @@ func TestGenerateLowerOnly(t *testing.T) {
 }
 
 func TestGenerateNumberOnly(t *testing.T) {
-	s, err := Generate(Options{
+	err := Configure(Options{
 		Number: true,
 	})
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	s, err := Generate()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -77,9 +89,13 @@ func TestGenerateNumberOnly(t *testing.T) {
 }
 
 func TestGenerateSymbolOnly(t *testing.T) {
-	s, err := Generate(Options{
+	err := Configure(Options{
 		Symbol: true,
 	})
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	s, err := Generate()
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -96,6 +112,6 @@ func TestGenerateSymbolOnly(t *testing.T) {
 
 func BenchmarkGenerateWithDefaultOptions(b *testing.B) {
   for i := 0; i < b.N; i++ {
-	  Generate(DefaultOptions)
+	  Generate()
   }
 }
