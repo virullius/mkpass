@@ -36,8 +36,9 @@ func main() {
     Symbol: !xSymbol,
     Length: length,
   }
+  mkpass.Configure(opt)
   for i := 0; i < count; i++ {
-    s, err := mkpass.Generate(opt)
+    s, err := mkpass.Generate()
     if err != nil {
       fmt.Fprintf(os.Stderr, err.Error())
       os.Exit(1)
