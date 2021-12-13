@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	VERSION   string = "0.2.0"
+	VERSION   string = "0.3.0"
 	MAX_TRIES int    = 10
 
 	UPPER  string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -24,8 +24,6 @@ var DefaultOptions = Options{
 	Symbol: true,
 	Length: 16,
 }
-var opts = DefaultOptions
-var charset string
 
 type Options struct {
 	Upper  bool
@@ -35,41 +33,41 @@ type Options struct {
 	Length int
 }
 
-func init() {
-  Configure(DefaultOptions)
+type Generator struct {
+	opts    Options
+	charset string
 }
 
-// Generate character set based on Options
-func Configure(o Options) error {
-  cs := ""
+func New(o Options) (Generator, error) {
+	g := Generator{
+		opts: o,
+	}
 	if o.Upper {
-		cs += UPPER
+		g.charset += UPPER
 	}
 	if o.Lower {
-		cs += LOWER
+		g.charset += LOWER
 	}
 	if o.Number {
-		cs += NUMBER
+		g.charset += NUMBER
 	}
 	if o.Symbol {
-		cs += SYMBOL
+		g.charset += SYMBOL
 	}
 	if o.Length == 0 {
-		o.Length = DefaultOptions.Length
+		g.opts.Length = DefaultOptions.Length
 	}
-	if len(cs) == 0 {
-		return fmt.Errorf("No character classes choosen, characterset is empty")
+	if len(g.charset) == 0 {
+		return g, fmt.Errorf("No character classes chosen, characterset is empty")
 	}
-  opts = o
-  charset = cs
-  return nil
+	return g, nil
 }
 
-func Generate() (string, error) {
+func (g Generator) Generate() (string, error) {
 	tries := 0
-  str := ""
+	var str string
 
-  // loop that breaks when circuit breaker trips or suitable string is generated
+	// loop that breaks when circuit breaker trips or suitable string is generated
 	for {
 		tries++
 		// circuit breaker for uncaught errors that prevent generation of suitable strings
@@ -77,27 +75,28 @@ func Generate() (string, error) {
 			return "", fmt.Errorf("Failed to generate suitable random string in %d tries", MAX_TRIES)
 		}
 
+		str = ""
 		// pick random characters from set one at a time
-		l := big.NewInt(int64(len(charset)))
-		for i := 0; i < opts.Length; i++ {
+		l := big.NewInt(int64(len(g.charset)))
+		for i := 0; i < g.opts.Length; i++ {
 			n, err := rand.Int(rand.Reader, l)
 			if err != nil {
 				return "", fmt.Errorf("Reading random integer: %s", err.Error())
 			}
-			str += string(charset[n.Int64()])
+			str += string(g.charset[n.Int64()])
 		}
 
 		// check if each used class is included in output
-		if opts.Upper && !strings.ContainsAny(str, UPPER) {
+		if g.opts.Upper && !strings.ContainsAny(str, UPPER) {
 			continue
 		}
-		if opts.Lower && !strings.ContainsAny(str, LOWER) {
+		if g.opts.Lower && !strings.ContainsAny(str, LOWER) {
 			continue
 		}
-		if opts.Number && !strings.ContainsAny(str, NUMBER) {
+		if g.opts.Number && !strings.ContainsAny(str, NUMBER) {
 			continue
 		}
-		if opts.Symbol && !strings.ContainsAny(str, SYMBOL) {
+		if g.opts.Symbol && !strings.ContainsAny(str, SYMBOL) {
 			continue
 		}
 		break

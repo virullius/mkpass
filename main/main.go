@@ -29,16 +29,20 @@ func main() {
     fmt.Println(mkpass.VERSION)
     os.Exit(0)
   }
-  opt := mkpass.Options{
+  o := mkpass.Options{
     Upper: !xUpper,
     Lower: !xLower,
     Number: !xNumber,
     Symbol: !xSymbol,
     Length: length,
   }
-  mkpass.Configure(opt)
+  g, err := mkpass.New(o)
+  if err != nil {
+    fmt.Fprintf(os.Stderr, err.Error())
+    os.Exit(1)
+  }
   for i := 0; i < count; i++ {
-    s, err := mkpass.Generate()
+    s, err := g.Generate()
     if err != nil {
       fmt.Fprintf(os.Stderr, err.Error())
       os.Exit(1)
