@@ -1,6 +1,7 @@
 extern crate rand;
 
 use std::env;
+use std::process;
 
 const MAX_TRIES: u8 = 10;
 
@@ -104,10 +105,16 @@ fn main() {
                 Some(z) => {
                     match z.parse::<u16>() {
                         Ok(j) => o.length = j,
-                        _ => (/*TODO Error, -l arg given, but following value failed to parse to int*/),
+                        _ => {
+                            eprintln!("Cannot parse length argument value as an integer");
+                            process::exit(1);
+                        },
                     }
                 },
-                _ => (/*TODO Error, -l arg given but no value following */),
+                _ => {
+                    eprintln!("Length argument given but no value");
+                    process::exit(1);
+                },
             }
         },
         _ => (/* no length argument, this is ok */),
