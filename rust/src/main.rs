@@ -1,5 +1,7 @@
 extern crate rand;
 
+use std::env;
+
 const MAX_TRIES: u8 = 10;
 
 const UPPER: &str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -86,8 +88,31 @@ impl Generator {
 }
 
 fn main() {
-    //TODO CLI options
-    let g = new(DEFAULT_OPTIONS);
+    let args: Vec<String> = env::args().collect();
+    if args.contains(&String::from("-version")) {
+        println!("{}", env!("CARGO_PKG_VERSION"));
+        return;
+    }
+    let mut o = DEFAULT_OPTIONS.clone();
+    o.upper = !args.contains(&String::from("-xu"));
+    o.lower = !args.contains(&String::from("-xl"));
+    o.number = !args.contains(&String::from("-xn"));
+    o.symbol = !args.contains(&String::from("-xs"));
+    match args.iter().position(|x| x == &String::from("-l")) {
+        Some(y) => {
+            match args.get(y + 1) {
+                Some(z) => {
+                    match z.parse::<u16>() {
+                        Ok(j) => o.length = j,
+                        _ => (/*TODO Error, -l arg given, but following value failed to parse to int*/),
+                    }
+                },
+                _ => (/*TODO Error, -l arg given but no value following */),
+            }
+        },
+        _ => (/* no length argument, this is ok */),
+    }
+    let g = new(o);
     let s = g.generate();
 
     println!("{}", s);
