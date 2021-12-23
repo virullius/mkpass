@@ -91,6 +91,7 @@ impl Generator {
 fn main() {
     let mut args = env::args();
     let mut o = DEFAULT_OPTIONS.clone();
+    let mut n: u16 = 1;
     // first argument is program name, throw it away
     args.next();
     loop {
@@ -118,6 +119,23 @@ fn main() {
                             },
                         }
                     },
+                    "-n" => {
+                        match args.next() {
+                            Some(i) => {
+                                match i.parse::<u16>() {
+                                    Ok(i) => n = i,
+                                    _ => {
+                                        eprintln!("Failed to parse number argument as integer");
+                                        process::exit(1);
+                                    },
+                                }
+                            },
+                            _ => {
+                                eprintln!("Number argument given but no value");
+                                process::exit(1);
+                            },
+                        }
+                    },
                     "-version" => {
                         println!(env!("CARGO_PKG_VERSION"));
                         process::exit(1);
@@ -129,7 +147,8 @@ fn main() {
         }
     }
     let g = new(o);
-    let s = g.generate();
-
-    println!("{}", s);
+    for _ in 0..n {
+        let s = g.generate();
+        println!("{}", s);
+    }
 }
