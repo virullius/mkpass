@@ -89,35 +89,44 @@ impl Generator {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.contains(&String::from("-version")) {
-        println!("{}", env!("CARGO_PKG_VERSION"));
-        return;
-    }
+    let mut args = env::args();
     let mut o = DEFAULT_OPTIONS.clone();
-    o.upper = !args.contains(&String::from("-xu"));
-    o.lower = !args.contains(&String::from("-xl"));
-    o.number = !args.contains(&String::from("-xn"));
-    o.symbol = !args.contains(&String::from("-xs"));
-    match args.iter().position(|x| x == &String::from("-l")) {
-        Some(y) => {
-            match args.get(y + 1) {
-                Some(z) => {
-                    match z.parse::<u16>() {
-                        Ok(j) => o.length = j,
-                        _ => {
-                            eprintln!("Cannot parse length argument value as an integer");
-                            process::exit(1);
-                        },
-                    }
-                },
-                _ => {
-                    eprintln!("Length argument given but no value");
-                    process::exit(1);
-                },
-            }
-        },
-        _ => (/* no length argument, this is ok */),
+    // first argument is program name, throw it away
+    args.next();
+    loop {
+        match args.next() {
+            Some(a) => {
+                match a.as_str() {
+                    "-xu" => o.upper = false,
+                    "-xl" => o.lower = false,
+                    "-xn" => o.number = false,
+                    "-xs" => o.symbol = false,
+                    "-l" => {
+                        match args.next() {
+                            Some(l) => {
+                                match l.parse::<u16>() {
+                                    Ok(i) => o.length = i,
+                                    _ => {
+                                        eprintln!("Failed to parse length argument as integer");
+                                        process::exit(1);
+                                    },
+                                }
+                            },
+                            _ => {
+                                eprintln!("Length argument given but no value");
+                                process::exit(1);
+                            },
+                        }
+                    },
+                    "-version" => {
+                        println!(env!("CARGO_PKG_VERSION"));
+                        process::exit(1);
+                    },
+                    _ => eprintln!("Unknown argument: {}", a),
+                }
+            },
+            None => break,
+        }
     }
     let g = new(o);
     let s = g.generate();
