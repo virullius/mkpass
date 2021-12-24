@@ -1,0 +1,13 @@
+name: mkpass
+version: 0.2.0
+
+authors:
+  - virullius <virullius@gmail.com>
+
+targets:
+  mkpass:
+    main: src/mkpass.cr
+
+crystal: 1.2.2
+
+license: MIT
