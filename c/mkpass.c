@@ -102,7 +102,7 @@ int generate(struct generator gen, char **str) {
   char *np = calloc(sizeof(char), gen.opts.length + 1);
   if (np == NULL) {
     fprintf(stderr, "Failed to allocate memory for generated string\n");
-    exit(1);
+    return 0;
   }
 
   for (int i = 0; i < gen.opts.length; i++) {
@@ -110,6 +110,8 @@ int generate(struct generator gen, char **str) {
     np[i] = (char)gen.charset[x];
   }
   *str = np;
+
+  return 1;
 }
 
 int main(int argc, char *argv[]) {
@@ -119,8 +121,9 @@ int main(int argc, char *argv[]) {
   char *pw = NULL;
   if (!generate(gen, &pw)) {
     fprintf(stderr, "Failed to generate string\n");
-    exit(1);
+    return 0;
   }
   printf("%s\n", pw);
 
+  return 1;
 }
