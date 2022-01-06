@@ -42,22 +42,22 @@ func New(o Options) (Generator, error) {
 	g := Generator{
 		opts: o,
 	}
-  nc := 0
+	nc := 0
 	if o.Upper {
 		g.charset += UPPER
-    nc++
+		nc++
 	}
 	if o.Lower {
 		g.charset += LOWER
-    nc++
+		nc++
 	}
 	if o.Number {
 		g.charset += NUMBER
-    nc++
+		nc++
 	}
 	if o.Symbol {
 		g.charset += SYMBOL
-    nc++
+		nc++
 	}
 	if o.Length == 0 {
 		g.opts.Length = DefaultOptions.Length
@@ -65,9 +65,9 @@ func New(o Options) (Generator, error) {
 	if len(g.charset) == 0 {
 		return g, fmt.Errorf("No character classes chosen, characterset is empty")
 	}
-  if nc > g.opts.Length {
-    return g, fmt.Errorf("Length is shorter than number of character classes")
-  }
+	if nc > g.opts.Length {
+		return g, fmt.Errorf("Length is shorter than number of character classes")
+	}
 	return g, nil
 }
 
