@@ -132,6 +132,15 @@ func TestGenerateSymbolOnly(t *testing.T) {
 	}
 }
 
+func TestGenerateTooShort(t *testing.T) {
+  opts := DefaultOptions
+  opts.Length = 3
+  _, err := New(opts)
+  if err == nil {
+    t.Errorf("Execting length too short error, got nil")
+  }
+}
+
 func BenchmarkGenerateWithDefaultOptions(b *testing.B) {
 	g, err := New(DefaultOptions)
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	VERSION   string = "0.3.1"
+	VERSION   string = "0.3.2"
 	MAX_TRIES int    = 10
 
 	UPPER  string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -42,17 +42,22 @@ func New(o Options) (Generator, error) {
 	g := Generator{
 		opts: o,
 	}
+  nc := 0
 	if o.Upper {
 		g.charset += UPPER
+    nc++
 	}
 	if o.Lower {
 		g.charset += LOWER
+    nc++
 	}
 	if o.Number {
 		g.charset += NUMBER
+    nc++
 	}
 	if o.Symbol {
 		g.charset += SYMBOL
+    nc++
 	}
 	if o.Length == 0 {
 		g.opts.Length = DefaultOptions.Length
@@ -60,6 +65,9 @@ func New(o Options) (Generator, error) {
 	if len(g.charset) == 0 {
 		return g, fmt.Errorf("No character classes chosen, characterset is empty")
 	}
+  if nc > g.opts.Length {
+    return g, fmt.Errorf("Length is shorter than number of character classes")
+  }
 	return g, nil
 }
 
