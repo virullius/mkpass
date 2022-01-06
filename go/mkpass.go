@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	VERSION   string = "0.3.0"
+	VERSION   string = "0.3.1"
 	MAX_TRIES int    = 10
 
 	UPPER  string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
