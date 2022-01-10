@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	VERSION   string = "0.3.2"
-	MAX_TRIES int    = 10
+	VERSION   string = "0.3.3"
+	MAX_TRIES int    = 100
 
 	UPPER  string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	LOWER  string = "abcdefghijklmnopqrstuvwxyz"
